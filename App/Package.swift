@@ -7,7 +7,7 @@ let package = Package(
     name: "App",
     platforms: [
         .iOS(.v18),
-        .macOS(.v15),
+				.macOS(.v15)
     ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
@@ -61,6 +61,9 @@ let package = Package(
         ),
         .target(
             name: "Components",
+						dependencies: [
+							.product(name: "Schema", package: "ChatDatabase"),
+						],
         ),
     ]
 )

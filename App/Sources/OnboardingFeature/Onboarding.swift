@@ -1,69 +1,123 @@
-import Foundation
+import Components
 import ComposableArchitecture
+import Foundation
 import SwiftUI
 
 @Reducer
 public struct OnboardingReducer {
-    public init() {}
+	public init() {}
     
-    @ObservableState
-    public struct State: Equatable {
-        var animationTrigger = false
-        public init() {}
-    }
+	@ObservableState
+	public struct State: Equatable {
+		var animationTrigger = false
+		public init() {}
+	}
     
-    public enum Action {
-        case task
-    }
+	public enum Action {
+		case task
+		case onTappedGetStartedButton
+	}
     
-    public var body: some ReducerOf<Self> {
-        Reduce { state, action in
-            switch action {
-            case .task:
-                state.animationTrigger = true
-                return .none
-            }
-        }
-    }
+	public var body: some ReducerOf<Self> {
+		Reduce { state, action in
+			switch action {
+			case .onTappedGetStartedButton:
+				return .none
+			case .task:
+				state.animationTrigger = true
+				return .none
+			}
+		}
+	}
 }
-
 
 public struct OnboardingView: View {
-    @Bindable var store: StoreOf<OnboardingReducer>
-    let siriColors: [Color] = [
-        .blue.opacity(0.8), .purple.opacity(0.8), .pink.opacity(0.8),
-        .blue.opacity(0.6), .cyan.opacity(0.8), .indigo.opacity(0.7),
-        .purple.opacity(0.6), .green.opacity(0.7), .pink.opacity(0.6)
-    ]
-    public init(store: StoreOf<OnboardingReducer>) {
-        self.store = store
-    }
-    public var body: some View {
-        ZStack {
-            
-        Text("Onboarding")
-                .font(.title.bold())
-                .foregroundStyle(.black)
-        }
-        .task {
-            await store.send(.task).finish()
-        }
-        
-    }
-    
-    func wobble(_ baseX: CGFloat, _ baseY: CGFloat, fx: Double, fy: Double, phaseX: Double = 0, phaseY: Double = 0, t: TimeInterval) -> SIMD2<Float> {
-        let dx = 0.03 * sin(t * fx + phaseX)
-        let dy = 0.03 * cos(t * fy + phaseY)
-        return SIMD2(Float(baseX + dx), Float(baseY + dy))
-    }
+	@Bindable var store: StoreOf<OnboardingReducer>
+	@Namespace private var namespace
+#if os(macOS)
+	@Environment(\.dismissWindow) var dismissWindow
+	@Environment(\.openWindow) var openWindow
+#endif
+	public init(store: StoreOf<OnboardingReducer>) {
+		self.store = store
+	}
+
+	public var body: some View {
+		contentBody()
+	}
+	
+	@ViewBuilder
+	private func contentBody() -> some View {
+		ZStack {
+			GlowMeshGradientView(referenceDate: .now)
+			VStack {
+				introductionView()
+				Spacer()
+				Group {
+					if #available(macOS 26.0, *) {
+						Button {
+							store.send(.onTappedGetStartedButton)
+						} label: {
+							startButtonContent()
+								.contentShape(.rect)
+						}
+						.controlSize(.small)
+						.buttonBorderShape(.capsule)
+						.glassEffect(.regular.interactive())
+							
+					} else {
+						Button {
+							store.send(.onTappedGetStartedButton)
+						} label: {
+							startButtonContent()
+						}
+						.buttonStyle(.borderedProminent)
+						.clipShape(.capsule)
+					}
+				}
+			}
+			.padding()
+		}
+		.task {
+			await store.send(.task).finish()
+		}
+	}
+	
+	@ViewBuilder
+	private func introductionView() -> some View {
+		VStack {
+			Label("Chat", systemImage: "message.badge.filled.fill")
+				.imageScale(.large)
+				.font(.largeTitle)
+				.fontWeight(.bold)
+				.fontDesign(.rounded)
+			LiquidGlassRevealView {
+				Text("with Apple Intelligence Foundation Models")
+					.frame(maxWidth: .infinity, alignment: .center)
+			}
+		}
+		.padding(.top, 60)
+	}
+	
+	@ViewBuilder
+	private func startButtonContent() -> some View {
+		Label("Let's get started", systemImage: "arrow.right")
+			.padding(.horizontal, 16)
+			.padding(.vertical, 8)
+			.font(.title3)
+			.fontWeight(.medium)
+	}
 }
 
-
 #Preview {
-    OnboardingView(
-        store: Store(
-            initialState: OnboardingReducer.State(),
-            reducer: { OnboardingReducer() }
-        )
-    )
+	OnboardingView(
+		store: Store(
+			initialState: OnboardingReducer.State(),
+			reducer: { OnboardingReducer() }
+		)
+	)
+#if os(macOS)
+	.frame(width: 300, height: 400)
+	.toolbarBackground(.hidden, for: .windowToolbar)
+#endif
 }

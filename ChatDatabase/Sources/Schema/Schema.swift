@@ -10,15 +10,18 @@ private let logger: Logger = .init(
 
 @Table
 public struct Dialog: Hashable, Identifiable {
-    public let id: UUID
-    public var title: String
+	@Column(as: UUID.BytesRepresentation.self)
+	public let id: UUID
+	public var title: String
 }
 
 extension Dialog.Draft: Identifiable {}
 
 @Table
 public struct Message: Hashable, Identifiable {
+	@Column(as: UUID.BytesRepresentation.self)
     public let id: UUID
+	@Column(as: UUID.BytesRepresentation.self)
     public var dialogID: Dialog.ID
     public var messageType: MessageType
     public let messageState: MessageState
@@ -70,7 +73,7 @@ public func chatDatabase() throws -> any DatabaseWriter {
     
     switch context {
     case .live:
-        let path = URL.applicationSupportDirectory.appending(component: "db.sqlite").path()
+        let path = URL.documentsDirectory.appending(component: "db.sqlite").path()
         logger.info("open \(path)")
         database = try DatabasePool(path: path, configuration: configuration)
     case .preview, .test:
@@ -84,7 +87,7 @@ public func chatDatabase() throws -> any DatabaseWriter {
         try #sql(
             """
             CREATE TABLE "dialogs" (
-                "id" UUID PRIMARY KEY,
+                "id" BLOB PRIMARY KEY,
                 "title" TEXT NOT NULL DEFAULT ''
             ) STRICT
             """
@@ -94,8 +97,8 @@ public func chatDatabase() throws -> any DatabaseWriter {
         try #sql(
             """
             CREATE TABLE "messages" (
-                "id" UUID PRIMARY KEY,
-                "dialogID" UUID NOT NULL REFERENCES "dialogs"("id") ON DELETE CASCADE,
+                "id" BLOB PRIMARY KEY,
+                "dialogID" BLOB NOT NULL REFERENCES "dialogs"("id") ON DELETE CASCADE,
                 "messageType" INTEGER NOT NULL DEFAULT 0,
                 "messageState" INTEGER NOT NULL DEFAULT 0,
                 "messageRole" INTEGER NOT NULL DEFAULT 0,
@@ -112,7 +115,7 @@ public func chatDatabase() throws -> any DatabaseWriter {
         try db.seed {
             @Dependency(\.uuid) var uuid
             @Dependency(\.date.now) var now
-            let dialog1 = Dialog(id: uuid(), title: "General Chat")
+						let dialog1 = Dialog(id: uuid(), title: "General Chat")
             let dialog2 = Dialog(id: uuid(), title: "Support Inquiry")
             let dialog3 = Dialog(id: uuid(), title: "Fun with Assistant")
             

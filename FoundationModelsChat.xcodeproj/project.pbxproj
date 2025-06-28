@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		71C7B89E2E0D18AA009358A9 /* AppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 71C7B89D2E0D18AA009358A9 /* AppFeature */; };
+		71FD48EB2E103B7300BF37BD /* OnboardingFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 71FD48EA2E103B7300BF37BD /* OnboardingFeature */; };
+		71FD48ED2E103B7500BF37BD /* HomeFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 71FD48EC2E103B7500BF37BD /* HomeFeature */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +29,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				71FD48EB2E103B7300BF37BD /* OnboardingFeature in Frameworks */,
 				71C7B89E2E0D18AA009358A9 /* AppFeature in Frameworks */,
+				71FD48ED2E103B7500BF37BD /* HomeFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,6 +83,8 @@
 			name = FoundationModelsChat;
 			packageProductDependencies = (
 				71C7B89D2E0D18AA009358A9 /* AppFeature */,
+				71FD48EA2E103B7300BF37BD /* OnboardingFeature */,
+				71FD48EC2E103B7500BF37BD /* HomeFeature */,
 			);
 			productName = FoundationModelsChat;
 			productReference = 71C7B87C2E0D16D1009358A9 /* FoundationModelsChat.app */;
@@ -92,7 +98,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1630;
-				LastUpgradeCheck = 1630;
+				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					71C7B87B2E0D16D1009358A9 = {
 						CreatedOnToolsVersion = 16.3;
@@ -173,6 +179,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 7V58U7PTNS;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -196,6 +203,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -235,6 +243,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7V58U7PTNS;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -251,6 +260,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 			};
 			name = Release;
@@ -264,9 +274,12 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 7V58U7PTNS;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -304,9 +317,12 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 7V58U7PTNS;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -362,6 +378,14 @@
 		71C7B89D2E0D18AA009358A9 /* AppFeature */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AppFeature;
+		};
+		71FD48EA2E103B7300BF37BD /* OnboardingFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OnboardingFeature;
+		};
+		71FD48EC2E103B7500BF37BD /* HomeFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = HomeFeature;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
