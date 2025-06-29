@@ -1,4 +1,4 @@
-// swift-tools-version: 6.1
+// swift-tools-version: 6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -6,8 +6,8 @@ import PackageDescription
 let package = Package(
     name: "App",
     platforms: [
-        .iOS(.v18),
-				.macOS(.v15)
+        .iOS(.v26),
+				.macOS(.v26)
     ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
@@ -27,6 +27,22 @@ let package = Package(
             name: "Components",
             targets: ["Components"]
         ),
+				.library(
+						name: "DialogsListFeature",
+						targets: ["DialogsListFeature"]
+				),
+				.library(
+						name: "DialogsListRowFeature",
+						targets: ["DialogsListRowFeature"]
+				),
+				.library(
+						name: "MessageListFeature",
+						targets: ["MessageListFeature"]
+				),
+				.library(
+						name: "ChatClient",
+						targets: ["ChatClient"]
+				),
     ],
     dependencies: [
         .package(path: "../ChatDatabase"),
@@ -55,6 +71,8 @@ let package = Package(
         .target(
             name: "HomeFeature",
             dependencies: [
+							"DialogsListFeature",
+							"MessageListFeature",
                 .product(name: "Schema", package: "ChatDatabase"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
@@ -65,5 +83,37 @@ let package = Package(
 							.product(name: "Schema", package: "ChatDatabase"),
 						],
         ),
+				.target(
+						name: "DialogsListFeature",
+						dependencies: [
+							"Components",
+							"DialogsListRowFeature",
+							.product(name: "Schema", package: "ChatDatabase"),
+							.product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+						],
+				),
+				.target(
+						name: "DialogsListRowFeature",
+						dependencies: [
+							"Components",
+							.product(name: "Schema", package: "ChatDatabase"),
+							.product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+						],
+				),
+				.target(
+						name: "MessageListFeature",
+						dependencies: [
+							"Components",
+							"ChatClient",
+							.product(name: "Schema", package: "ChatDatabase"),
+							.product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+						],
+				),
+				.target(
+						name: "ChatClient",
+						dependencies: [
+							.product(name: "Schema", package: "ChatDatabase"),
+						],
+				),
     ]
 )

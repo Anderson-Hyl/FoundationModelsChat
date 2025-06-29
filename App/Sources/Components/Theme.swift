@@ -7,8 +7,7 @@ public enum AppTheme: Int {
 	case dark
 }
 
-@MainActor
-public struct ThemeColors {
+public struct ThemeColors: Sendable {
 	public let accent: Color
 	public let background: Color
 	public let secondaryBackground: Color
@@ -86,5 +85,16 @@ public struct ThemeColors {
 		self.bubbleAI = bubbleAI
 		self.inputField = inputField
 		self.meshGradientColors = meshGradientColors
+	}
+}
+
+extension ColorScheme {
+	@MainActor
+	public var themeColors: ThemeColors {
+		switch self {
+		case .light: ThemeColors.light
+		case .dark: ThemeColors.dark
+		default: ThemeColors.dark
+		}
 	}
 }

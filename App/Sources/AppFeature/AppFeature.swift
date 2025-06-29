@@ -83,7 +83,7 @@ public struct AppView: View {
 		case let .home(store):
 			HomeView(store: store)
 			#if os(macOS)
-				.frame(minWidth: 600, idealWidth: 800, maxWidth: .infinity, minHeight: 400, idealHeight: 600, maxHeight: .infinity)
+				.frame(minWidth: 1000, idealWidth: 1200, maxWidth: .infinity, minHeight: 400, idealHeight: 600, maxHeight: .infinity)
 			#endif
 		}
 	}
