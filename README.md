@@ -2,7 +2,7 @@
 
 A modern, local **AI chat application** built with **SwiftUI**, **Swift Concurrency**, and **The Composable Architecture (TCA)**, leveraging **Apple Foundation Models** for efficient local LLM interactions on **macOS** and **iOS**.
 
-[👉 View on GitHub](https://github.com/Anderson-Hyl/FoundationModelsChat)
+https://github.com/user-attachments/assets/9d37e013-a6b9-40cd-ba5a-f3d6036e5eb9
 
 ---
 
@@ -36,11 +36,3 @@ graph LR
     MessageListReducer(MessageListReducer: 1)
     OnboardingReducer(OnboardingReducer: 1)
 ```
-
-## Recording
-
-
-
-https://github.com/user-attachments/assets/9d37e013-a6b9-40cd-ba5a-f3d6036e5eb9
-
-
