@@ -50,6 +50,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 import AppKit
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
+	@MainActor
 	lazy var store: StoreOf<AppReducer> = Store(
 		initialState: AppReducer.State(
 			appDelegate: AppDelegateReducer.State(),
