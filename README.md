@@ -39,4 +39,8 @@ graph LR
 
 ## Recording
 
-<video src="Screenshots/recording.mp4" width="320" height="240" controls></video>
+
+
+https://github.com/user-attachments/assets/9d37e013-a6b9-40cd-ba5a-f3d6036e5eb9
+
+
