@@ -93,6 +93,7 @@ public struct MessageListReducer {
 					messageType: .text,
 					messageState: .thinking,
 					messageRole: .assistant,
+                    sendAt: .now,
 					text: "Thinking..."
 				)
 				state.transientStreamingMessage = assistantMessage
@@ -109,6 +110,7 @@ public struct MessageListReducer {
 										messageType: .text,
 										messageState: .streaming,
 										messageRole: .assistant,
+                                        sendAt: .now,
 										text: streamContent
 									)
 								)

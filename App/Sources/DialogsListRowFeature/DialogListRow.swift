@@ -41,6 +41,7 @@ public struct DialogListRowView: View {
 					}
 				}
 			}
+            Spacer()
 		}
 		.padding()
 		.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)

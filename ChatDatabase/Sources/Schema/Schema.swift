@@ -10,8 +10,7 @@ private let logger: Logger = .init(
 )
 
 @Table
-public struct Dialog: Hashable, Identifiable, Sendable, Equatable {
-	@Column(as: UUID.BytesRepresentation.self)
+public struct Dialog: Identifiable, Sendable, Equatable, Codable {
 	public let id: UUID
 	public var title: String
 	
@@ -24,15 +23,13 @@ public struct Dialog: Hashable, Identifiable, Sendable, Equatable {
 extension Dialog.Draft: Identifiable {}
 
 @Table
-public struct Message: Hashable, Identifiable, Sendable, Equatable {
-	@Column(as: UUID.BytesRepresentation.self)
+public struct Message: Identifiable, Sendable, Equatable, Codable {
 	public let id: UUID
-	@Column(as: UUID.BytesRepresentation.self)
 	public var dialogID: Dialog.ID
 	public var messageType: MessageType
 	public let messageState: MessageState
 	public let messageRole: MessageRole
-	public var sendAt: Date = .init()
+	public var sendAt: Date
 	public var text: String
 	
 	public init(
@@ -139,7 +136,7 @@ public func chatDatabase() throws -> any DatabaseWriter {
 		try #sql(
 			"""
 			CREATE TABLE "dialogs" (
-			    "id" BLOB PRIMARY KEY,
+			    "id" TEXT PRIMARY KEY NOT NULL ON CONFLICT REPLACE,
 			    "title" TEXT NOT NULL DEFAULT ''
 			) STRICT
 			"""
@@ -149,49 +146,32 @@ public func chatDatabase() throws -> any DatabaseWriter {
 		try #sql(
 			"""
 			CREATE TABLE "messages" (
-			    "id" BLOB PRIMARY KEY,
-			    "dialogID" BLOB NOT NULL REFERENCES "dialogs"("id") ON DELETE CASCADE,
+			    "id" TEXT PRIMARY KEY NOT NULL ON CONFLICT REPLACE,
+			    "dialogID" TEXT NOT NULL,
 			    "messageType" INTEGER NOT NULL DEFAULT 0,
 			    "messageState" INTEGER NOT NULL DEFAULT 0,
 			    "messageRole" INTEGER NOT NULL DEFAULT 0,
 			    "sendAt" TEXT NOT NULL DEFAULT (datetime('now')),
-			    "text" TEXT NOT NULL DEFAULT ''
+			    "text" TEXT NOT NULL DEFAULT '', FOREIGN KEY("dialogID") REFERENCES "dialogs"("id") ON DELETE CASCADE
 			) STRICT
 			"""
 		)
 		.execute(db)
 	}
-	
-	#if DEBUG
-	migrator.registerMigration("Seed DialogListRow") { db in
-		try db.seed {
-			@Dependency(\.date.now) var now
-			let dialog1 = Dialog(id: UUID(0), title: "General Chat")
-			let dialog2 = Dialog(id: UUID(1), title: "How about the weather")
-			
-			dialog1
-			dialog2
-		}
-	}
-	#endif
     
 	#if DEBUG
 	migrator.registerMigration("Seed database") { db in
 		try db.seed {
-			@Dependency(\.uuid) var uuid
 			@Dependency(\.date.now) var now
-			let dialog1 = Dialog(id: uuid(), title: "General Chat")
-			let dialog2 = Dialog(id: uuid(), title: "Support Inquiry")
-			let dialog3 = Dialog(id: uuid(), title: "Fun with Assistant")
-            
-			dialog1
-			dialog2
-			dialog3
+            let dialogsIDs = (0...2).map { _ in UUID() }
+			Dialog(id: dialogsIDs[0], title: "General Chat")
+			Dialog(id: dialogsIDs[1], title: "Support Inquiry")
+			Dialog(id: dialogsIDs[2], title: "Fun with Assistant")
             
 			// 添加一些消息（Message）
 			Message(
-				id: uuid(),
-				dialogID: dialog1.id,
+				id: UUID(),
+				dialogID: dialogsIDs[0],
 				messageType: .text,
 				messageState: .success,
 				messageRole: .user,
@@ -199,8 +179,8 @@ public func chatDatabase() throws -> any DatabaseWriter {
 				text: "Hello! How are you?"
 			)
 			Message(
-				id: uuid(),
-				dialogID: dialog1.id,
+				id: UUID(),
+				dialogID: dialogsIDs[0],
 				messageType: .text,
 				messageState: .success,
 				messageRole: .assistant,
@@ -208,8 +188,8 @@ public func chatDatabase() throws -> any DatabaseWriter {
 				text: "I'm doing great! How can I help you today?"
 			)
 			Message(
-				id: uuid(),
-				dialogID: dialog2.id,
+				id: UUID(),
+				dialogID: dialogsIDs[1],
 				messageType: .text,
 				messageState: .success,
 				messageRole: .user,
@@ -217,8 +197,8 @@ public func chatDatabase() throws -> any DatabaseWriter {
 				text: "I have an issue with my subscription."
 			)
 			Message(
-				id: uuid(),
-				dialogID: dialog2.id,
+				id: UUID(),
+				dialogID: dialogsIDs[1],
 				messageType: .text,
 				messageState: .success,
 				messageRole: .assistant,
@@ -226,8 +206,8 @@ public func chatDatabase() throws -> any DatabaseWriter {
 				text: "I'm sorry to hear that. Could you tell me more?"
 			)
 			Message(
-				id: uuid(),
-				dialogID: dialog3.id,
+				id: UUID(),
+				dialogID: dialogsIDs[2],
 				messageType: .text,
 				messageState: .success,
 				messageRole: .user,
@@ -235,8 +215,8 @@ public func chatDatabase() throws -> any DatabaseWriter {
 				text: "Tell me a joke!"
 			)
 			Message(
-				id: uuid(),
-				dialogID: dialog3.id,
+				id: UUID(),
+				dialogID: dialogsIDs[2],
 				messageType: .text,
 				messageState: .streaming,
 				messageRole: .assistant,
