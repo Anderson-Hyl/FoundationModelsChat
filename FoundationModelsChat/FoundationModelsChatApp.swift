@@ -23,15 +23,6 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 		prepareDependencies {
 			$0.defaultDatabase = try! chatDatabase()
 		}
-		store = Store(
-			initialState: AppReducer.State(
-				appDelegate: AppDelegateReducer.State()
-			),
-			reducer: {
-				AppReducer()
-					._printChanges()
-			}
-		)
 		super.init()
 	}
 

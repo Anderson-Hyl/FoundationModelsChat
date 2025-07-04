@@ -56,6 +56,7 @@ let package = Package(
             dependencies: [
                 "OnboardingFeature",
                 "HomeFeature",
+                "ChatClient",
                 .product(name: "Schema", package: "ChatDatabase"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],

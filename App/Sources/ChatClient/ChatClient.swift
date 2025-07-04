@@ -6,7 +6,7 @@ import Synchronization
 @dynamicMemberLookup
 public struct ChatClient: Sendable {
 	static let sessionStore: Mutex<[String: LanguageModelSession]> = .init([:])
-	public var isAvailable: @Sendable () -> Bool
+    public var checkFMAvailablity: @Sendable () -> SystemLanguageModel.Availability
 	public var prewarm: @Sendable (Dialog) -> Void
 	public var respondTo: @Sendable (Dialog, String) async throws -> LanguageModelSession.ResponseStream<MessageGenerable>
 	
@@ -36,8 +36,8 @@ private func session(for dialogId: String) -> LanguageModelSession {
 
 extension ChatClient: DependencyKey {
 	public static let liveValue = ChatClient(
-		isAvailable: {
-			 SystemLanguageModel.default.isAvailable
+        checkFMAvailablity: {
+			 SystemLanguageModel.default.availability
 		 },
 		 prewarm: { dialog in
 			 let session = session(for: dialog.id.uuidString)

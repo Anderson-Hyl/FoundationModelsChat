@@ -20,7 +20,7 @@ public struct MessageListReducer {
 			_messages = FetchAll(query)
 		}
 
-		@FetchAll var messages: [Message]
+        @FetchAll(animation: .default) var messages: [Message]
 
 		var query: some StructuredQueries.Statement<Message> {
 			Message
@@ -78,9 +78,6 @@ public struct MessageListReducer {
 				
 			case .onTask:
 				@Dependency(\.chatClient) var chatClient
-				guard chatClient.isAvailable() else {
-					return .none
-				}
 				return .run { [dialog = state.dialog] _ in
 					chatClient.prewarm(dialog)
 				}

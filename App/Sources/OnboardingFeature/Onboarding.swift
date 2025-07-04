@@ -10,12 +10,14 @@ public struct OnboardingReducer {
 	@ObservableState
 	public struct State: Equatable {
 		var animationTrigger = false
+        var isFoundationModelsAvailable = true
 		public init() {}
 	}
     
 	public enum Action {
 		case task
 		case onTappedGetStartedButton
+        case updateIsFoundationModelsAvailable(Bool)
 	}
     
 	public var body: some ReducerOf<Self> {
@@ -23,6 +25,9 @@ public struct OnboardingReducer {
 			switch action {
 			case .onTappedGetStartedButton:
 				return .none
+            case let .updateIsFoundationModelsAvailable(available):
+                state.isFoundationModelsAvailable = available
+                return .none
 			case .task:
 				state.animationTrigger = true
 				return .none
@@ -53,28 +58,16 @@ public struct OnboardingView: View {
 			VStack {
 				introductionView()
 				Spacer()
-				Group {
-					if #available(macOS 26.0, *) {
-						Button {
-							store.send(.onTappedGetStartedButton)
-						} label: {
-							startButtonContent()
-								.contentShape(.rect)
-						}
-						.controlSize(.small)
-						.buttonBorderShape(.capsule)
-						.glassEffect(.regular.interactive())
-							
-					} else {
-						Button {
-							store.send(.onTappedGetStartedButton)
-						} label: {
-							startButtonContent()
-						}
-						.buttonStyle(.borderedProminent)
-						.clipShape(.capsule)
-					}
-				}
+                Button {
+                    store.send(.onTappedGetStartedButton)
+                } label: {
+                    startButtonContent()
+                        .contentShape(.rect)
+                }
+                .controlSize(.small)
+                .buttonBorderShape(.capsule)
+                .glassEffect(.regular.interactive())
+                .disabled(!store.isFoundationModelsAvailable)
 			}
 			.padding()
 		}
